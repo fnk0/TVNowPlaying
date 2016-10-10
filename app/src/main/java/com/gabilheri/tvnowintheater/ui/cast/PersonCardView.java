@@ -52,6 +52,10 @@ public class PersonCardView extends BindableCardView<CastMember> {
         }
     }
 
+    public ImageView getProfileImageIV() {
+        return mProfileImage;
+    }
+
     @Override
     protected int getLayoutResource() {
         return R.layout.card_cast;

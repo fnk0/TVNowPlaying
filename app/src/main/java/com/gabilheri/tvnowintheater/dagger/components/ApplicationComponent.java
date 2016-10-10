@@ -6,6 +6,7 @@ import com.gabilheri.tvnowintheater.dagger.modules.ApplicationModule;
 import com.gabilheri.tvnowintheater.dagger.modules.HttpClientModule;
 import com.gabilheri.tvnowintheater.ui.details.MovieDetailsFragment;
 import com.gabilheri.tvnowintheater.ui.main.MainFragment;
+import com.gabilheri.tvnowintheater.ui.person_details.PersonDetailsFragment;
 
 import javax.inject.Singleton;
 
@@ -29,4 +30,5 @@ public interface ApplicationComponent {
     void inject(App app);
     void inject(MainFragment mainFragment);
     void inject(MovieDetailsFragment detailsFragment);
+    void inject(PersonDetailsFragment personDetailsFragment);
 }

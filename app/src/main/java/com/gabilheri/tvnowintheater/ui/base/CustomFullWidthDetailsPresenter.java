@@ -1,4 +1,4 @@
-package com.gabilheri.tvnowintheater.ui.details;
+package com.gabilheri.tvnowintheater.ui.base;
 
 import android.support.v17.leanback.widget.DetailsOverviewLogoPresenter;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
@@ -17,11 +17,11 @@ import com.gabilheri.tvnowintheater.R;
  * @since 10/8/16.
  */
 
-public class FullWidthMovieDetailsPresenter extends FullWidthDetailsOverviewRowPresenter {
+public class CustomFullWidthDetailsPresenter extends FullWidthDetailsOverviewRowPresenter {
 
     private int previousState = STATE_FULL;
 
-    public FullWidthMovieDetailsPresenter(Presenter detailsPresenter, DetailsOverviewLogoPresenter logoPresenter) {
+    public CustomFullWidthDetailsPresenter(Presenter detailsPresenter, DetailsOverviewLogoPresenter logoPresenter) {
         super(detailsPresenter, logoPresenter);
         setInitialState(FullWidthDetailsOverviewRowPresenter.STATE_FULL);
     }
@@ -67,6 +67,6 @@ public class FullWidthMovieDetailsPresenter extends FullWidthDetailsOverviewRowP
 
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.presenter_movie_details;
+        return R.layout.custom_presenter_details;
     }
 }

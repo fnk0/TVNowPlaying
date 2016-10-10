@@ -34,6 +34,7 @@
         </activity>
 
         <activity android:name=".ui.details.MovieDetailsActivity" />
+        <activity android:name=".ui.person_details.PersonActivity" />
 
     </application>
 

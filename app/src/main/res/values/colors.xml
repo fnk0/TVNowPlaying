@@ -7,7 +7,11 @@
     <color name="light_blue">#03A9F4</color>
     <color name="yellow">#ffeb3b</color>
 
+    <color name="accent">#081c24</color>
+    <color name="accent_dark">#05151b</color>
+
     <color name="blue">#80081c24</color>
+    <color name="blue_dark">#8005151b</color>
 
     <color name="white_20">#33FFFFFF</color>
     <color name="light_text_color">#222222</color>

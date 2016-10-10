@@ -4,6 +4,7 @@ import com.gabilheri.tvnowintheater.dagger.modules.HttpClientModule;
 import com.gabilheri.tvnowintheater.data.models.CreditsResponse;
 import com.gabilheri.tvnowintheater.data.models.MovieDetails;
 import com.gabilheri.tvnowintheater.data.models.MovieResponse;
+import com.gabilheri.tvnowintheater.data.models.Person;
 import com.gabilheri.tvnowintheater.data.models.VideoResponse;
 
 import retrofit2.http.GET;
@@ -72,6 +73,18 @@ public interface TheMovieDbAPI {
     @GET(HttpClientModule.MOVIE + "{id}/videos")
     Observable<VideoResponse> getMovieVideos(
             @Path("id") String movieId,
+            @Query("api_key") String apiKey
+    );
+
+    @GET(HttpClientModule.PERSON + "{id}")
+    Observable<Person> getPerson(
+            @Path("id") int personId,
+            @Query("api_key") String apiKey
+    );
+
+    @GET(HttpClientModule.DISCOVER)
+    Observable<MovieResponse> getMoviesForCastID(
+            @Query("with_cast") int castId,
             @Query("api_key") String apiKey
     );
 

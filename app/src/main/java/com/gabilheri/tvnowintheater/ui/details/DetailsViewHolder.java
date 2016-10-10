@@ -43,6 +43,9 @@ public class DetailsViewHolder extends Presenter.ViewHolder {
     @BindView(R.id.director_tv)
     TextView mDirectorTv;
 
+    @BindView(R.id.overview_label)
+    TextView mOverviewLabelTV;
+
     @BindView(R.id.genres)
     LinearLayout mGenresLayout;
 
@@ -69,6 +72,14 @@ public class DetailsViewHolder extends Presenter.ViewHolder {
 
             if (movie.getPaletteColors() != null) {
 
+                movieTitleTV.setTextColor(movie.getPaletteColors().getTitleColor());
+                mOverviewLabelTV.setTextColor(movie.getPaletteColors().getTitleColor());
+                mTaglineTV.setTextColor(movie.getPaletteColors().getTextColor());
+                mRuntimeTV.setTextColor(movie.getPaletteColors().getTextColor());
+                movieYearTV.setTextColor(movie.getPaletteColors().getTextColor());
+                movieOverview.setTextColor(movie.getPaletteColors().getTextColor());
+                mDirectorTv.setTextColor(movie.getPaletteColors().getTextColor());
+
                 int _16dp = (int) itemView.getResources().getDimension(R.dimen.full_padding);
                 int _8dp = (int) itemView.getResources().getDimension(R.dimen.half_padding);
                 float corner = itemView.getResources().getDimension(R.dimen.genre_corner);
@@ -79,7 +90,7 @@ public class DetailsViewHolder extends Presenter.ViewHolder {
                     GradientDrawable shape = new GradientDrawable();
                     shape.setShape(GradientDrawable.RECTANGLE);
                     shape.setCornerRadius(corner);
-                    shape.setColor(movie.getPaletteColors().statusBarColor);
+                    shape.setColor(movie.getPaletteColors().getStatusBarColor());
                     tv.setPadding(_8dp, _8dp, _8dp, _8dp);
                     tv.setBackground(shape);
 

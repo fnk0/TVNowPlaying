@@ -1,5 +1,8 @@
 package com.gabilheri.tvnowintheater.data.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.squareup.moshi.Json;
 
 /**
@@ -10,7 +13,7 @@ import com.squareup.moshi.Json;
  * @since 10/9/16.
  */
 
-public class CastMember {
+public class CastMember implements Parcelable {
 
     private int id;
     private String character;
@@ -91,4 +94,42 @@ public class CastMember {
         this.profilePath = profilePath;
         return this;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.character);
+        dest.writeString(this.name);
+        dest.writeInt(this.order);
+        dest.writeInt(this.castId);
+        dest.writeString(this.creditId);
+        dest.writeString(this.profilePath);
+    }
+
+    protected CastMember(Parcel in) {
+        this.id = in.readInt();
+        this.character = in.readString();
+        this.name = in.readString();
+        this.order = in.readInt();
+        this.castId = in.readInt();
+        this.creditId = in.readString();
+        this.profilePath = in.readString();
+    }
+
+    public static final Creator<CastMember> CREATOR = new Creator<CastMember>() {
+        @Override
+        public CastMember createFromParcel(Parcel source) {
+            return new CastMember(source);
+        }
+
+        @Override
+        public CastMember[] newArray(int size) {
+            return new CastMember[size];
+        }
+    };
 }

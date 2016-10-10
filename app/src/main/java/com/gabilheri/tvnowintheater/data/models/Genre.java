@@ -1,5 +1,8 @@
 package com.gabilheri.tvnowintheater.data.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by <a href="mailto:marcus@gabilheri.com">Marcus Gabilheri</a>
  *
@@ -8,7 +11,7 @@ package com.gabilheri.tvnowintheater.data.models;
  * @since 10/9/16.
  */
 
-public class Genre {
+public class Genre implements Parcelable {
 
     private int id;
     private String name;
@@ -33,4 +36,32 @@ public class Genre {
         this.name = name;
         return this;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.name);
+    }
+
+    protected Genre(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+    }
+
+    public static final Parcelable.Creator<Genre> CREATOR = new Parcelable.Creator<Genre>() {
+        @Override
+        public Genre createFromParcel(Parcel source) {
+            return new Genre(source);
+        }
+
+        @Override
+        public Genre[] newArray(int size) {
+            return new Genre[size];
+        }
+    };
 }

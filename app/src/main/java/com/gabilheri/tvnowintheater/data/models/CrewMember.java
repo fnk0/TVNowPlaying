@@ -1,5 +1,8 @@
 package com.gabilheri.tvnowintheater.data.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.squareup.moshi.Json;
 
 /**
@@ -10,15 +13,15 @@ import com.squareup.moshi.Json;
  * @since 10/10/16.
  */
 
-public class CrewMember {
+public class CrewMember implements Parcelable {
 
-    int id;
-    String job;
-    String name;
-    String department;
+    private int id;
+    private String job;
+    private String name;
+    private String department;
 
     @Json(name = "profile_path")
-    String profilePath;
+    private String profilePath;
 
     public CrewMember() {
     }
@@ -67,4 +70,38 @@ public class CrewMember {
         this.profilePath = profilePath;
         return this;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.job);
+        dest.writeString(this.name);
+        dest.writeString(this.department);
+        dest.writeString(this.profilePath);
+    }
+
+    protected CrewMember(Parcel in) {
+        this.id = in.readInt();
+        this.job = in.readString();
+        this.name = in.readString();
+        this.department = in.readString();
+        this.profilePath = in.readString();
+    }
+
+    public static final Parcelable.Creator<CrewMember> CREATOR = new Parcelable.Creator<CrewMember>() {
+        @Override
+        public CrewMember createFromParcel(Parcel source) {
+            return new CrewMember(source);
+        }
+
+        @Override
+        public CrewMember[] newArray(int size) {
+            return new CrewMember[size];
+        }
+    };
 }

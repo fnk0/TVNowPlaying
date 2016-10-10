@@ -33,6 +33,7 @@ import com.gabilheri.tvnowintheater.App;
 import com.gabilheri.tvnowintheater.Config;
 import com.gabilheri.tvnowintheater.dagger.modules.HttpClientModule;
 import com.gabilheri.tvnowintheater.data.Api.TheMovieDbAPI;
+import com.gabilheri.tvnowintheater.data.models.CastMember;
 import com.gabilheri.tvnowintheater.data.models.CreditsResponse;
 import com.gabilheri.tvnowintheater.data.models.CrewMember;
 import com.gabilheri.tvnowintheater.data.models.Movie;
@@ -40,11 +41,15 @@ import com.gabilheri.tvnowintheater.data.models.MovieDetails;
 import com.gabilheri.tvnowintheater.data.models.MovieResponse;
 import com.gabilheri.tvnowintheater.data.models.Video;
 import com.gabilheri.tvnowintheater.data.models.VideoResponse;
-import com.gabilheri.tvnowintheater.helpers.PaletteColors;
+import com.gabilheri.tvnowintheater.data.models.PaletteColors;
 import com.gabilheri.tvnowintheater.helpers.PaletteUtils;
+import com.gabilheri.tvnowintheater.ui.base.CustomFullWidthDetailsPresenter;
+import com.gabilheri.tvnowintheater.ui.cast.PersonCardView;
 import com.gabilheri.tvnowintheater.ui.cast.PersonPresenter;
 import com.gabilheri.tvnowintheater.ui.movie.MovieCardView;
 import com.gabilheri.tvnowintheater.ui.movie.MoviePresenter;
+import com.gabilheri.tvnowintheater.ui.person_details.PersonActivity;
+import com.gabilheri.tvnowintheater.ui.person_details.PersonDetailsFragment;
 
 import java.util.List;
 
@@ -72,7 +77,7 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
     private Movie movie;
     private MovieDetails movieDetails;
     private ArrayObjectAdapter mAdapter;
-    private FullWidthMovieDetailsPresenter mFullWidthMovieDetailsPresenter;
+    private CustomFullWidthDetailsPresenter mFullWidthMovieDetailsPresenter;
     private DetailsOverviewRow mDetailsOverviewRow;
     private String youtubeID;
     private PaletteColors mPaletteColors;
@@ -99,7 +104,7 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
     }
 
     private void setUpAdapter() {
-        mFullWidthMovieDetailsPresenter = new FullWidthMovieDetailsPresenter(new DetailsDescriptionPresenter(),
+        mFullWidthMovieDetailsPresenter = new CustomFullWidthDetailsPresenter(new DetailsDescriptionPresenter(),
                 new PictureDetailsOverviewLogoPresenter());
 
         FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
@@ -310,14 +315,27 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
             } else {
                 startActivity(i);
             }
+        } else if (item instanceof CastMember) {
+            CastMember castMember = (CastMember) item;
+            Intent personIntent = new Intent(getActivity(), PersonActivity.class);
+            personIntent.putExtra(CastMember.class.getSimpleName(), castMember);
+            if (itemViewHolder.view instanceof PersonCardView) {
+                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        getActivity(),
+                        ((PersonCardView) itemViewHolder.view).getProfileImageIV(),
+                        PersonDetailsFragment.TRANSITION_NAME).toBundle();
+                getActivity().startActivity(personIntent, bundle);
+            } else {
+                startActivity(personIntent);
+            }
         }
     }
 
     @Override
     public void onGenerated(Palette palette) {
         mPaletteColors = PaletteUtils.getPaletteColors(palette);
-        mFullWidthMovieDetailsPresenter.setActionsBackgroundColor(mPaletteColors.statusBarColor);
-        mFullWidthMovieDetailsPresenter.setBackgroundColor(mPaletteColors.toolbarBackgroundColor);
+        mFullWidthMovieDetailsPresenter.setActionsBackgroundColor(mPaletteColors.getStatusBarColor());
+        mFullWidthMovieDetailsPresenter.setBackgroundColor(mPaletteColors.getToolbarBackgroundColor());
         bindPalette();
         notifyDetailsChanged();
     }
