@@ -7,3 +7,6 @@
 /build
 /captures
 .externalNativeBuild
+Movies.apk
+libs/
+src/main/java/com/gabilheri/tvnowintheater/Config.java

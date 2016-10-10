@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Now In Theater</string>
+    <string name="app_name">Movies</string>
     <string name="movie_poster">Movie Poster</string>
     <string name="overview">Overview:</string>
     <string name="_">-</string>

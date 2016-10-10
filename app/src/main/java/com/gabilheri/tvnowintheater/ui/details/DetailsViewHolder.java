@@ -55,7 +55,7 @@ public class DetailsViewHolder extends Presenter.ViewHolder {
     }
 
     public void bind(MovieDetails movie) {
-        if (movie != null) {
+        if (movie != null && movie.getTitle() != null) {
             mRuntimeTV.setText(String.format(Locale.getDefault(), "%d minutes", movie.getRuntime()));
             mTaglineTV.setText(movie.getTagline());
             movieTitleTV.setText(movie.getTitle());

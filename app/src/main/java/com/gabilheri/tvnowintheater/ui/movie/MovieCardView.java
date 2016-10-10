@@ -45,6 +45,10 @@ public class MovieCardView extends BindableCardView<Movie> {
         mTvPopularity.setText(String.format(Locale.getDefault(), "%.2f", data.getVoteAverage()));
     }
 
+    public ImageView getPosterIV() {
+        return mPosterIV;
+    }
+
     @Override
     protected int getLayoutResource() {
         return R.layout.card_movie;

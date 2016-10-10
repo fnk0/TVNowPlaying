@@ -33,20 +33,20 @@ public class FullWidthMovieDetailsPresenter extends FullWidthDetailsOverviewRowP
         lp.setMarginStart(v.getResources().getDimensionPixelSize(R.dimen.logo_margin_start));
         lp.topMargin = v.getResources().getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_blank_height) - lp.height / 2;
 
-        float v1 = v.getResources().getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height) + v
+        float offset = v.getResources().getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_actions_height) + v
                 .getResources().getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_details_v2_description_margin_top) + (lp.height / 2);
 
         switch (viewHolder.getState()) {
             case STATE_FULL:
             default:
                 if (previousState == STATE_HALF) {
-                    v.animate().translationYBy(-v1);
+                    v.animate().translationYBy(-offset);
                 }
 
                 break;
             case STATE_HALF:
                 if (previousState == STATE_FULL) {
-                    v.animate().translationYBy(v1);
+                    v.animate().translationYBy(offset);
                 }
 
                 break;

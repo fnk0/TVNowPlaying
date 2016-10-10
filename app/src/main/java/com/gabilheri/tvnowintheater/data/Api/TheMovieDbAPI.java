@@ -27,6 +27,24 @@ public interface TheMovieDbAPI {
             @Query("page") int page
     );
 
+    @GET(HttpClientModule.TOP_RATED)
+    Observable<MovieResponse> getTopRatedMovies(
+            @Query("api_key") String apiKey,
+            @Query("page") int page
+    );
+
+    @GET(HttpClientModule.UPCOMING)
+    Observable<MovieResponse> getUpcomingMovies(
+            @Query("api_key") String apiKey,
+            @Query("page") int page
+    );
+
+    @GET(HttpClientModule.POPULAR)
+    Observable<MovieResponse> getPopularMovies(
+            @Query("api_key") String apiKey,
+            @Query("page") int page
+    );
+
     @GET(HttpClientModule.MOVIE + "{id}/similar")
     Observable<MovieResponse> getSimilarMovies(
             @Path("id") String movieId,

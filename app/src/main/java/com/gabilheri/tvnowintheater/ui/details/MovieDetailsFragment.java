@@ -9,15 +9,16 @@ import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
+import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.OnActionClickedListener;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.graphics.Palette;
 
 import com.bumptech.glide.Glide;
@@ -42,6 +43,7 @@ import com.gabilheri.tvnowintheater.data.models.VideoResponse;
 import com.gabilheri.tvnowintheater.helpers.PaletteColors;
 import com.gabilheri.tvnowintheater.helpers.PaletteUtils;
 import com.gabilheri.tvnowintheater.ui.cast.PersonPresenter;
+import com.gabilheri.tvnowintheater.ui.movie.MovieCardView;
 import com.gabilheri.tvnowintheater.ui.movie.MoviePresenter;
 
 import java.util.List;
@@ -62,6 +64,8 @@ import timber.log.Timber;
 
 public class MovieDetailsFragment extends DetailsFragment implements Palette.PaletteAsyncListener, OnItemViewClickedListener {
 
+    public static String TRANSITION_NAME = "poster_transition";
+
     @Inject
     TheMovieDbAPI mDbAPI;
 
@@ -71,6 +75,7 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
     private FullWidthMovieDetailsPresenter mFullWidthMovieDetailsPresenter;
     private DetailsOverviewRow mDetailsOverviewRow;
     private String youtubeID;
+    private PaletteColors mPaletteColors;
 
     public static MovieDetailsFragment newInstance(Movie movie) {
         Bundle args = new Bundle();
@@ -90,24 +95,26 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
 
         movie = getArguments().getParcelable(Movie.class.getSimpleName());
         setUpAdapter();
+        setUpDetailsOverviewRow();
     }
 
     private void setUpAdapter() {
-        DetailsDescriptionPresenter detailsDescriptionPresenter = new DetailsDescriptionPresenter();
-        mFullWidthMovieDetailsPresenter = new FullWidthMovieDetailsPresenter(detailsDescriptionPresenter, new PictureDetailsOverviewLogoPresenter());
+        mFullWidthMovieDetailsPresenter = new FullWidthMovieDetailsPresenter(new DetailsDescriptionPresenter(),
+                new PictureDetailsOverviewLogoPresenter());
 
+        FullWidthDetailsOverviewSharedElementHelper helper = new FullWidthDetailsOverviewSharedElementHelper();
+        helper.setSharedElementEnterTransition(getActivity(), TRANSITION_NAME);
+        mFullWidthMovieDetailsPresenter.setListener(helper);
+        mFullWidthMovieDetailsPresenter.setParticipatingEntranceTransition(false);
 
-        mFullWidthMovieDetailsPresenter.setOnActionClickedListener(new OnActionClickedListener() {
-            @Override
-            public void onActionClicked(Action action) {
-                int actionId = (int) action.getId();
-                switch (actionId) {
-                    case 0:
-                        if (youtubeID != null) {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + youtubeID)));
-                        }
-                        break;
-                }
+        mFullWidthMovieDetailsPresenter.setOnActionClickedListener(action -> {
+            int actionId = (int) action.getId();
+            switch (actionId) {
+                case 0:
+                    if (youtubeID != null) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + youtubeID)));
+                    }
+                    break;
             }
         });
 
@@ -117,6 +124,12 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
         mAdapter = new ArrayObjectAdapter(classPresenterSelector);
         setOnItemViewClickedListener(this);
         setAdapter(mAdapter);
+    }
+
+    private void setUpDetailsOverviewRow() {
+        loadImage(HttpClientModule.POSTER_URL + movie.getPosterPath());
+        mDetailsOverviewRow = new DetailsOverviewRow(new MovieDetails());
+        mAdapter.add(mDetailsOverviewRow);
         fetchMovieDetails();
     }
 
@@ -131,9 +144,7 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
 
     private void bindMovieDetails(MovieDetails movieDetails) {
         this.movieDetails = movieDetails;
-        mDetailsOverviewRow = new DetailsOverviewRow(this.movieDetails);
-        mAdapter.add(mDetailsOverviewRow);
-        loadImage(HttpClientModule.POSTER_URL + movie.getPosterPath());
+        mDetailsOverviewRow.setItem(this.movieDetails);
         fetchCastMembers();
         fetchVideos();
     }
@@ -148,21 +159,21 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
     }
 
     private void handleVideoResponse(VideoResponse response) {
-        youtubeID = getTrailler(response.getResults(), "official");
+        youtubeID = getTrailer(response.getResults(), "official");
         if (youtubeID == null) {
-            youtubeID = getTrailler(response.getResults(), "trailer");
+            youtubeID = getTrailer(response.getResults(), "trailer");
         }
 
         if (youtubeID == null) {
-            youtubeID = getTrailler(response.getResults(), "teaser");
+            youtubeID = getTrailer(response.getResults(), "teaser");
         }
 
         if (youtubeID == null) {
-            youtubeID = getTraillerByType(response.getResults(), "trailer");
+            youtubeID = getTrailerByType(response.getResults(), "trailer");
         }
 
         if (youtubeID == null) {
-            youtubeID = getTraillerByType(response.getResults(), "featurette");
+            youtubeID = getTrailerByType(response.getResults(), "featurette");
         }
 
         if (youtubeID != null) {
@@ -173,7 +184,7 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
         }
     }
 
-    private String getTrailler(List<Video> videos, String keyword) {
+    private String getTrailer(List<Video> videos, String keyword) {
         String id = null;
         for(Video v : videos) {
             if (v.getName().toLowerCase().contains(keyword)) {
@@ -183,7 +194,7 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
         return id;
     }
 
-    private String getTraillerByType(List<Video> videos, String keyword) {
+    private String getTrailerByType(List<Video> videos, String keyword) {
         String id = null;
         for(Video v : videos) {
             if (v.getType().toLowerCase().contains(keyword)) {
@@ -268,19 +279,19 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
     }
 
     private void bindSimilarItems(MovieResponse response) {
-        fetchRecommendations();
         if (!response.getResults().isEmpty()) {
             ArrayObjectAdapter similarMoviesAdapter = new ArrayObjectAdapter(new MoviePresenter());
             similarMoviesAdapter.addAll(0, response.getResults());
-            mAdapter.add(new ListRow(new HeaderItem(0, "Similar Movies"), similarMoviesAdapter));
+            mAdapter.add(new ListRow(new HeaderItem(1, "Similar Movies"), similarMoviesAdapter));
         }
+        fetchRecommendations();
     }
 
     private void bindRecommendations(MovieResponse response) {
         if (!response.getResults().isEmpty()) {
             ArrayObjectAdapter recommendationsAdapter = new ArrayObjectAdapter(new MoviePresenter());
             recommendationsAdapter.addAll(0, response.getResults());
-            mAdapter.add(new ListRow(new HeaderItem(0, "Recommendations"), recommendationsAdapter));
+            mAdapter.add(new ListRow(new HeaderItem(2, "Recommendations"), recommendationsAdapter));
         }
     }
 
@@ -290,17 +301,31 @@ public class MovieDetailsFragment extends DetailsFragment implements Palette.Pal
             Movie movie = (Movie) item;
             Intent i = new Intent(getActivity(), MovieDetailsActivity.class);
             i.putExtra(Movie.class.getSimpleName(), movie);
-            startActivity(i);
+            if (itemViewHolder.view instanceof MovieCardView) {
+                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        getActivity(),
+                        ((MovieCardView) itemViewHolder.view).getPosterIV(),
+                        MovieDetailsFragment.TRANSITION_NAME).toBundle();
+                getActivity().startActivity(i, bundle);
+            } else {
+                startActivity(i);
+            }
         }
     }
 
     @Override
     public void onGenerated(Palette palette) {
-        PaletteColors colors = PaletteUtils.getPaletteColors(palette);
-        mFullWidthMovieDetailsPresenter.setActionsBackgroundColor(colors.statusBarColor);
-        mFullWidthMovieDetailsPresenter.setBackgroundColor(colors.toolbarBackgroundColor);
-        this.movieDetails.setPaletteColors(colors);
+        mPaletteColors = PaletteUtils.getPaletteColors(palette);
+        mFullWidthMovieDetailsPresenter.setActionsBackgroundColor(mPaletteColors.statusBarColor);
+        mFullWidthMovieDetailsPresenter.setBackgroundColor(mPaletteColors.toolbarBackgroundColor);
+        bindPalette();
         notifyDetailsChanged();
+    }
+
+    private void bindPalette() {
+        if (movieDetails != null) {
+            this.movieDetails.setPaletteColors(mPaletteColors);
+        }
     }
 
     private void notifyDetailsChanged() {
