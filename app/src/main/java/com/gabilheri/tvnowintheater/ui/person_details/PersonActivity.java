@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import com.gabilheri.tvnowintheater.R;
 import com.gabilheri.tvnowintheater.data.models.CastMember;
 import com.gabilheri.tvnowintheater.ui.base.BaseTvActivity;
+import com.gabilheri.tvnowintheater.ui.base.GlideBackgroundManager;
 
 /**
  * Created by <a href="mailto:marcus@gabilheri.com">Marcus Gabilheri</a>
@@ -23,7 +24,8 @@ public class PersonActivity extends BaseTvActivity {
         CastMember castMember = getIntent().getExtras().getParcelable(CastMember.class.getSimpleName());
         PersonDetailsFragment detailsFragment = PersonDetailsFragment.newInstance(castMember);
         addFragment(detailsFragment);
-        getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.material_bg));
+        GlideBackgroundManager backgroundManager = new GlideBackgroundManager(this);
+        backgroundManager.setBackground(ContextCompat.getDrawable(this, R.drawable.material_bg));
     }
 
 }

@@ -35,6 +35,7 @@
 
         <activity android:name=".ui.details.MovieDetailsActivity" />
         <activity android:name=".ui.person_details.PersonActivity" />
+        <activity android:name=".ui.search.SearchActivity" />
 
     </application>
 

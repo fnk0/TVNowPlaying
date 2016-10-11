@@ -88,4 +88,10 @@ public interface TheMovieDbAPI {
             @Query("api_key") String apiKey
     );
 
+    @GET(HttpClientModule.SEARCH_MOVIE)
+    Observable<MovieResponse> searchMovies(
+            @Query("query") String query,
+            @Query("api_key") String apiKey
+    );
+
 }

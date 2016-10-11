@@ -27,6 +27,7 @@ import com.gabilheri.tvnowintheater.ui.details.MovieDetailsActivity;
 import com.gabilheri.tvnowintheater.ui.details.MovieDetailsFragment;
 import com.gabilheri.tvnowintheater.ui.movie.MovieCardView;
 import com.gabilheri.tvnowintheater.ui.movie.MoviePresenter;
+import com.gabilheri.tvnowintheater.ui.search.SearchActivity;
 
 import javax.inject.Inject;
 
@@ -76,8 +77,13 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         App.instance().appComponent().inject(this);
-        mBackgroundManager = GlideBackgroundManager.getInstance(getActivity());
+        mBackgroundManager = new GlideBackgroundManager(getActivity());
         setBrandColor(ContextCompat.getColor(getActivity(), R.color.blue));
+
+        setOnSearchClickedListener(v -> {
+            startActivity(new Intent(getActivity(), SearchActivity.class));
+        });
+
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
         setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.powered_by));

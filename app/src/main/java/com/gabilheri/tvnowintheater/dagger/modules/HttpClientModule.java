@@ -41,6 +41,7 @@ public class HttpClientModule {
     public static final String MOVIE = "movie/";
     public static final String PERSON = "person/";
     public static final String DISCOVER = "discover/movie/";
+    public static final String SEARCH_MOVIE = "search/movie/";
     public static final String TV = "tv/";
 
     @Provides

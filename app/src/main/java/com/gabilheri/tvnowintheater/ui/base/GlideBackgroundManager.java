@@ -39,20 +39,6 @@ public class GlideBackgroundManager {
     public static GlideBackgroundManager instance;
 
     /**
-     * Gets a new or existing instance of the background manager.
-     * @param activity
-     *      The activity which we want the manager for
-     * @return
-     *      A GlideBackgroundManager to handle updating the background with a picture
-     */
-    public static GlideBackgroundManager getInstance(Activity activity) {
-        if (instance == null) {
-            instance = new GlideBackgroundManager(activity);
-        }
-        return instance;
-    }
-
-    /**
      * @param activity
      *      The activity to which this WindowManager is attached
      */
